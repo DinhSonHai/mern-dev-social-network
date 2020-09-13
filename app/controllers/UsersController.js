@@ -1,4 +1,4 @@
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator');
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -49,7 +49,7 @@ class UsersController {
 
       user.password = await bcrypt.hash(password, salt);
 
-      await user.save();
+      user = await user.save();
 
       //Return jsonwebtoken
       const payload = {
@@ -68,7 +68,7 @@ class UsersController {
         }
       );
 
-      // res.send(user._id);
+      //res.send(user._id);
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
