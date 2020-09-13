@@ -4,6 +4,9 @@ const route = require('./routes');
 
 const app = express();
 
+//Init middlewares
+app.use(express.json({ extended: false }));
+
 //Connect DB
 connectDB();
 

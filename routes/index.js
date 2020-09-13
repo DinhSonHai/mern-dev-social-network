@@ -8,6 +8,7 @@ function route(app) {
   app.use('/api/auth', auth);
   app.use('/api/profile', profile);
   app.use('/api/posts', posts);
+  app.use('/', (req, res) => res.send('API running'));
 }
 
 module.exports = route;
