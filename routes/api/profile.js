@@ -10,6 +10,11 @@ const ProfileController = require('../../app/controllers/ProfileController');
 // @access Public
 router.get('/', ProfileController.index);
 
+// @route DELETE api/profile
+// @desc delete profile, user & posts
+// @access Private
+router.delete('/', auth, ProfileController.delete);
+
 // @route GET api/profile/user/:user_id
 // @desc Get profile by id
 // @access Public
