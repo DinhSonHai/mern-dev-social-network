@@ -143,6 +143,46 @@ class ProfileController {
       return res.status(500).send('Server Error');
     }
   }
+
+  // @route PUT api/profile/experience
+  // @desc Get profile experience
+  // @access Private
+  async addExperience(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description,
+    } = req.body;
+
+    const newExperience = {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description,
+    };
+
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+      profile.experience.unshift(newExperience);
+      profile.save();
+      res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      return res.status(500).send('Server Error');
+    }
+  }
 }
 
 module.exports = new ProfileController();

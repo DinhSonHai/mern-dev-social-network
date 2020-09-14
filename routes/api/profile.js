@@ -40,4 +40,20 @@ router.post(
 // @access Private
 router.get('/me', auth, ProfileController.getByJWT);
 
+// @route PUT api/profile/experience
+// @desc Get profile experience
+// @access Private
+router.put(
+  '/experience',
+  [
+    auth,
+    [
+      check('title', 'Title is required').not().isEmpty(),
+      check('company', 'Company is required').not().isEmpty(),
+      check('from', 'From date is required').not().isEmpty(),
+    ],
+  ],
+  ProfileController.addExperience
+);
+
 module.exports = router;
