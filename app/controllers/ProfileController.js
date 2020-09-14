@@ -1,11 +1,13 @@
 const Profile = require('../models/Profile');
 const User = require('../models/User');
+const request = require('request');
+require('dotenv').config();
 const { check, validationResult } = require('express-validator');
 
 class ProfileController {
-  // @route GET api/profile
-  // @desc Get all profiles
-  // @access Public
+  // @route   GET api/profile
+  // @desc    Get all profiles
+  // @access  Public
   async index(req, res, next) {
     try {
       const profiles = await Profile.find().populate('user', [
@@ -19,9 +21,9 @@ class ProfileController {
     }
   }
 
-  // @route DELETE api/profile
-  // @desc delete profile, user & posts
-  // @access Private
+  // @route   DELETE api/profile
+  // @desc    Delete profile, user & posts
+  // @access  Private
   async delete(req, res, next) {
     try {
       //Remove profile
@@ -36,9 +38,9 @@ class ProfileController {
     }
   }
 
-  // @route GET api/profile/user/user_id
-  // @desc Get profile by id
-  // @access Public
+  // @route   GET api/profile/user/user_id
+  // @desc    Get profile by id
+  // @access  Public
   async getById(req, res, next) {
     try {
       const profile = await Profile.findOne({
@@ -144,9 +146,9 @@ class ProfileController {
     }
   }
 
-  // @route PUT api/profile/experience
-  // @desc Get profile experience
-  // @access Private
+  // @route   PUT api/profile/experience
+  // @desc    Get profile experience
+  // @access  Private
   async addExperience(req, res, next) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -184,9 +186,9 @@ class ProfileController {
     }
   }
 
-  // @route DELETE api/profile/experience/:exp_id
-  // @desc Delete experience from profile
-  // @access Private
+  // @route   DELETE api/profile/experience/:exp_id
+  // @desc    Delete experience from profile
+  // @access  Private
   async deleteExperience(req, res, next) {
     try {
       const profile = await Profile.findOne({ user: req.user.id });
@@ -206,9 +208,9 @@ class ProfileController {
     }
   }
 
-  // @route PUT api/profile/education
-  // @desc Get profile education
-  // @access Private
+  // @route   PUT api/profile/education
+  // @desc    Get profile education
+  // @access  Private
   async addEducation(req, res, next) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -246,9 +248,9 @@ class ProfileController {
     }
   }
 
-  // @route DELETE api/profile/education/:exp_id
-  // @desc Delete education from profile
-  // @access Private
+  // @route   DELETE api/profile/education/:exp_id
+  // @desc    Delete education from profile
+  // @access  Private
   async deleteEducation(req, res, next) {
     try {
       const profile = await Profile.findOne({ user: req.user.id });
@@ -262,6 +264,29 @@ class ProfileController {
 
       await profile.save();
       res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      return res.status(500).send('Server Error');
+    }
+  }
+
+  // @route   GET api/profile/github/:username
+  // @desc    GET user repos from Github
+  // @access  Public
+  async getRepos(req, res, next) {
+    try {
+      const options = {
+        uri: `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${process.env.githubClientId}&client_secret=${process.env.githubClientSecret}`,
+        method: 'GET',
+        headers: { 'user-agent': 'node.js' },
+      };
+      request(options, (error, response, body) => {
+        if (error) console.error(error);
+        if (response.statusCode !== 200) {
+          return res.status(404).json({ msg: 'No github profile found' });
+        }
+        res.json(JSON.parse(body));
+      });
     } catch (err) {
       console.error(err.message);
       return res.status(500).send('Server Error');
