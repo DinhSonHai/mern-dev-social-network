@@ -205,6 +205,68 @@ class ProfileController {
       return res.status(500).send('Server Error');
     }
   }
+
+  // @route PUT api/profile/education
+  // @desc Get profile education
+  // @access Private
+  async addEducation(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const {
+      school,
+      degree,
+      fieldofstudy,
+      from,
+      to,
+      current,
+      description,
+    } = req.body;
+
+    const newEducation = {
+      school,
+      degree,
+      fieldofstudy,
+      from,
+      to,
+      current,
+      description,
+    };
+
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+      profile.education.unshift(newEducation);
+      profile.save();
+      res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      return res.status(500).send('Server Error');
+    }
+  }
+
+  // @route DELETE api/profile/education/:exp_id
+  // @desc Delete education from profile
+  // @access Private
+  async deleteEducation(req, res, next) {
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+
+      //Get remove index
+      const removeIndex = profile.education
+        .map((item) => item.id)
+        .indexOf(req.params.edu_id);
+
+      profile.education.splice(removeIndex, 1);
+
+      await profile.save();
+      res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      return res.status(500).send('Server Error');
+    }
+  }
 }
 
 module.exports = new ProfileController();
