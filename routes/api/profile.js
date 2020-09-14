@@ -10,6 +10,11 @@ const ProfileController = require('../../app/controllers/ProfileController');
 // @access Public
 router.get('/', ProfileController.index);
 
+// @route GET api/profile/user/:user_id
+// @desc Get profile by id
+// @access Public
+router.get('/user/:user_id', ProfileController.getById);
+
 // @route   POST api/profile
 // @desc    Create user profile
 // @access  Private

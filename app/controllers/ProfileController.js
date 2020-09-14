@@ -19,6 +19,25 @@ class ProfileController {
     }
   }
 
+  // @route GET api/profile/user/user_id
+  // @desc Get profile by id
+  // @access Public
+  async getById(req, res, next) {
+    try {
+      const profile = await Profile.findOne({
+        user: req.params.user_id,
+      }).populate('user', ['name', 'avatar']);
+      if (!profile) return res.status(400).json({ msg: 'Profile not found' });
+      res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      if (err.kind === 'ObjectId') {
+        return res.status(400).json({ msg: 'Profile not found' });
+      }
+      res.status(500).send('Server Error');
+    }
+  }
+
   // @route   POST api/profile
   // @desc    Create user profile
   // @access  Private
