@@ -5,10 +5,10 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../app/middlewares/auth');
 const ProfileController = require('../../app/controllers/ProfileController');
 
-// @route GET api/profile/me
-// @desc Get current user profile
-// @access Private
-router.get('/me', auth, ProfileController.getByJWT);
+// @route GET api/profile
+// @desc Get all profiles
+// @access Public
+router.get('/', ProfileController.index);
 
 // @route   POST api/profile
 // @desc    Create user profile
@@ -24,5 +24,10 @@ router.post(
   ],
   ProfileController.update
 );
+
+// @route GET api/profile/me
+// @desc Get current user profile
+// @access Private
+router.get('/me', auth, ProfileController.getByJWT);
 
 module.exports = router;

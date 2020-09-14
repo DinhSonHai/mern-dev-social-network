@@ -3,6 +3,22 @@ const User = require('../models/User');
 const { check, validationResult } = require('express-validator');
 
 class ProfileController {
+  // @route GET api/profile
+  // @desc Get all profiles
+  // @access Public
+  async index(req, res, next) {
+    try {
+      const profiles = await Profile.find().populate('user', [
+        'name',
+        'avatar',
+      ]);
+      res.json(profiles);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+
   // @route   POST api/profile
   // @desc    Create user profile
   // @access  Private
@@ -78,7 +94,7 @@ class ProfileController {
     try {
       const profile = await Profile.findOne({
         user: req.user.id,
-      }).populate('User', ['name', 'avatar']);
+      }).populate('user', ['name', 'avatar']);
 
       if (!profile) {
         return res
