@@ -34,4 +34,9 @@ router.post(
 // @access  Private
 router.put('/like/:id', auth, PostsController.like);
 
+// @route   PUT api/posts/unlike/:id
+// @desc    Unlike a post
+// @access  Private
+router.put('/unlike/:id', auth, PostsController.unlike);
+
 module.exports = router;
