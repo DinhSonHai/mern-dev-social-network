@@ -48,4 +48,9 @@ router.post(
   PostsController.comment
 );
 
+// @route   DELETE api/posts/comment/:id/:comment_id
+// @desc    Delete comment on a post
+// @access  Private
+router.delete('/comment/:id/:comment_id', auth, PostsController.deleteComment);
+
 module.exports = router;
