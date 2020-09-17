@@ -39,4 +39,13 @@ router.put('/like/:id', auth, PostsController.like);
 // @access  Private
 router.put('/unlike/:id', auth, PostsController.unlike);
 
+// @route   POST api/posts/comment/:id
+// @desc    Comment on a post
+// @access  Private
+router.post(
+  '/comment/:id',
+  [auth, [check('text', 'Text is required').not().isEmpty()]],
+  PostsController.comment
+);
+
 module.exports = router;
