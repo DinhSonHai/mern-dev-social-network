@@ -29,4 +29,9 @@ router.post(
   PostsController.create
 );
 
+// @route   PUT api/posts/like/:id
+// @desc    Like a post
+// @access  Private
+router.put('/like/:id', auth, PostsController.like);
+
 module.exports = router;
