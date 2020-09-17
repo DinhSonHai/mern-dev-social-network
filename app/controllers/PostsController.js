@@ -23,13 +23,40 @@ class PostsController {
   async getById(req, res, next) {
     try {
       const post = await Post.findById(req.params.id);
-      if(!post) {
+
+      if (!post) {
         return res.status(404).json({ msg: 'Post not found' });
       }
       res.json(post);
     } catch (err) {
       console.error(err.message);
-      if(err.kind === 'ObjectId') {
+      if (err.kind === 'ObjectId') {
+        return res.status(404).json({ msg: 'Post not found' });
+      }
+      res.status(500).send('Server Error');
+    }
+  }
+
+  // @route   DELETE api/posts/:id
+  // @desc    Delete post by Id
+  // @access  Private
+  async deleteById(req, res, next) {
+    try {
+      const post = await Post.findById(req.params.id);
+
+      if (!post) {
+        return res.status(404).json({ msg: 'Post not found' });
+      }
+
+      if (post.user.toString() !== req.user.id) {
+        return res.status(401).json({ msg: 'User not authorized' });
+      }
+
+      await post.remove();
+      res.json({ msg: 'Post removed' });
+    } catch (err) {
+      console.error(err.message);
+      if (err.kind === 'ObjectId') {
         return res.status(404).json({ msg: 'Post not found' });
       }
       res.status(500).send('Server Error');
