@@ -3,14 +3,21 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { getCurrentProfile } from '../../actions/profile';
-import { STATES } from 'mongoose';
-import profile from '../../reducers/profile';
+import Spinner from '../layout/Spinner';
 
-const Dashboard = ({ auth, profile, getCurrentProfile }) => {
+const Dashboard = ({
+  auth,
+  profile: { profile, loading },
+  getCurrentProfile,
+}) => {
   useEffect(() => {
     getCurrentProfile();
   }, []);
-  return <div className="dashboard">Dashboard</div>;
+  return loading && profile === null ? (
+    <Spinner />
+  ) : (
+    <div className="dashboard">test</div>
+  );
 };
 
 Dashboard.propTypes = {
