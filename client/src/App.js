@@ -13,6 +13,7 @@ import Login from './components/auth/Login';
 import Dashboard from './components/dashboard/Dashboard';
 import PrivateRoute from './components/routing/PrivateRoute';
 import CreateProfile from './components/profile/CreateProfile';
+import EditProfile from './components/profile/EditProfile';
 
 import store from './store';
 import { loadUser } from './actions/auth';
@@ -43,6 +44,11 @@ const App = () => {
                 exact
                 path="/create/profile"
                 component={CreateProfile}
+              />
+              <PrivateRoute
+                exact
+                path="/edit/profile"
+                component={EditProfile}
               />
             </Switch>
           </section>
