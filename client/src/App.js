@@ -14,6 +14,7 @@ import Dashboard from './components/dashboard/Dashboard';
 import PrivateRoute from './components/routing/PrivateRoute';
 import CreateProfile from './components/profile/CreateProfile';
 import EditProfile from './components/profile/EditProfile';
+import AddExperience from './components/profile/AddExperience';
 
 import store from './store';
 import { loadUser } from './actions/auth';
@@ -49,6 +50,11 @@ const App = () => {
                 exact
                 path="/edit/profile"
                 component={EditProfile}
+              />
+              <PrivateRoute
+                exact
+                path="/add/experience"
+                component={AddExperience}
               />
             </Switch>
           </section>
