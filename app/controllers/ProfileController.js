@@ -1,5 +1,6 @@
 const Profile = require('../models/Profile');
 const User = require('../models/User');
+const Post = require('../models/Post');
 const request = require('request');
 require('dotenv').config();
 const { check, validationResult } = require('express-validator');
@@ -26,6 +27,8 @@ class ProfileController {
   // @access  Private
   async delete(req, res, next) {
     try {
+      //Remove Post
+      await Post.deleteMany({ user: req.user.id });
       //Remove profile
       await Profile.findOneAndRemove({ user: req.user.id });
       //Remove user

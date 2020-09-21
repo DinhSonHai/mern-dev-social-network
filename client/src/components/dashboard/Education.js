@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Moment from 'react-moment';
 
-const Education = ({ education }) => (
+import { deleteEducation } from '../../actions/profile';
+
+const Education = ({ education, deleteEducation }) => (
   <div className="education">
     <h2 className="my-2">Education Credentials</h2>
     <table className="table">
@@ -30,7 +32,14 @@ const Education = ({ education }) => (
                 <Moment format="YYYY/MM/DD">{edu.to}</Moment>
               )}
             </td>
-            <td className="btn btn-danger">Delete</td>
+            <td>
+              <button
+                onClick={() => deleteEducation(edu._id)}
+                className="btn btn-danger"
+              >
+                Delete
+              </button>
+            </td>
           </tr>
         ))}
       </tbody>
@@ -40,6 +49,7 @@ const Education = ({ education }) => (
 
 Education.propTypes = {
   education: PropTypes.array.isRequired,
+  deleteEducation: PropTypes.func.isRequired,
 };
 
-export default Education;
+export default connect(null, { deleteEducation })(Education);
