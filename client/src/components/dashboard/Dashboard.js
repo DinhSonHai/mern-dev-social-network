@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { getCurrentProfile } from '../../actions/profile';
+import Experience from './Experience';
 import Spinner from '../layout/Spinner';
+import Education from './Education';
 
 const Dashboard = ({
   auth: { user },
@@ -36,6 +38,8 @@ const Dashboard = ({
               Education
             </Link>
           </div>
+          <Experience experience={profile.experience} />
+          <Education education={profile.education} />
         </Fragment>
       ) : (
         <Fragment>
