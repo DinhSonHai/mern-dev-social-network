@@ -1,7 +1,9 @@
 const express = require('express');
+const morgan = require('morgan');
+require('dotenv').config();
+
 const connectDB = require('./config/db');
 const route = require('./routes');
-require('dotenv').config();
 
 const app = express();
 
@@ -10,6 +12,10 @@ app.use(express.json({ extended: false }));
 
 //Connect DB
 connectDB();
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 const PORT = process.env.PORT || 5000;
 
