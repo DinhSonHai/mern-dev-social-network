@@ -4,10 +4,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const { OAuth2Client } = require('google-auth-library');
+const nodemailer = require('nodemailer');
 
 const User = require('../models/User');
 const config = require('config');
 const { errorHandler } = require('../helpers/dbErrorHandling');
+const { getMaxListeners } = require('../models/User');
 
 class UsersController {
   // [GET] /api/users
@@ -61,16 +63,53 @@ class UsersController {
         },
       };
 
-      jwt.sign(
+      const token = jwt.sign(
         payload,
         config.get('jwtSecret'),
-        { expiresIn: 360000 },
-        (err, token) => {
-          if (err) throw err;
-          res.json({ token });
-        }
+        { expiresIn: 360000 }
+        // (err, token) => {
+        //   if (err) throw err;
+        //   res.json({ token });
+        // }
       );
 
+      //Email
+      //step 1
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.NODEMAILER_EMAIL,
+          pass: process.env.NODEMAILER_PASS,
+        },
+      });
+
+      const content = `
+        <h1>Please click this link to activate your account</h1>
+        <p>${process.env.CLIENT_URL}/users/activate/${token}</p>
+        <hr/>
+        <p>This email contain sensitive info</p>
+        <p>${process.env.CLIENT_URL}</p>
+      `;
+
+      //step 2
+      const mailOptions = {
+        from: process.env.NODEMAILER_EMAIL,
+        to: email,
+        subject: 'Account activation link',
+        html: content,
+      };
+
+      //step 3
+      transporter
+        .sendMail(mailOptions)
+        .then(() => {
+          return res.json({ message: `An email has been sent to ${email}` });
+        })
+        .catch((err) => {
+          return res.status(400).json({
+            error: errorHandler(err),
+          });
+        });
       //res.send(user._id);
     } catch (err) {
       console.error(err.message);
