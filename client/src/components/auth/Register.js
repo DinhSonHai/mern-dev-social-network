@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
@@ -23,25 +24,23 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
-      setAlert('Passwords do not match', 'danger');
+      // setAlert('Passwords do not match', 'danger');
+      toast.error('Password do not match', { autoClose: 5000 });
     } else {
-      register({ name, email, password });
+      //register({ name, email, password });
       // console.log(formData);
       //   const newUser = {
       //     name,
       //     email,
       //     password,
       //   };
-
       //   try {
       //     const config = {
       //       headers: {
       //         'Content-Type': 'application/json',
       //       },
       //     };
-
       //     const body = JSON.stringify(newUser);
-
       //     const res = await axios.post('/api/users', body, config);
       //     console.log(res.data);
       //   } catch (err) {

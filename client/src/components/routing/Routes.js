@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 import Alert from '../layout/Alert';
 import NotFound from '../layout/NotFound';
@@ -20,7 +21,8 @@ import Posts from '../posts/Posts';
 const Routes = () => {
   return (
     <section className="container">
-      <Alert />
+      {/* <Alert /> */}
+      <ToastContainer />
       <Switch>
         <Route exact path="/register" component={Register} />
         <Route exact path="/login" component={Login} />
