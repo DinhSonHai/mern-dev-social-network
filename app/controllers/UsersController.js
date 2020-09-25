@@ -2,9 +2,12 @@ const { check, validationResult } = require('express-validator');
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const _ = require('lodash');
+const { OAuth2Client } = require('google-auth-library');
 
 const User = require('../models/User');
 const config = require('config');
+const { errorHandler } = require('../helpers/dbErrorHandling');
 
 class UsersController {
   // [GET] /api/users
