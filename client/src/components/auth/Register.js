@@ -8,7 +8,7 @@ import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
 //import axios from 'axios';
 
-const Register = ({ setAlert, register, isAuthenticated }) => {
+const Register = ({ setAlert, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -25,9 +25,10 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
     e.preventDefault();
     if (password !== password2) {
       // setAlert('Passwords do not match', 'danger');
-      toast.error('Password do not match', { autoClose: 5000 });
+      toast.error('Password do not match');
     } else {
-      //register({ name, email, password });
+      const result = await register({ name, email, password });
+      // toast.success(result.message);
       // console.log(formData);
       //   const newUser = {
       //     name,
@@ -115,7 +116,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
 
 Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
-  register: PropTypes.func.isRequired,
+  // register: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
 };
 
@@ -123,4 +124,4 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { setAlert, register })(Register);
+export default connect(mapStateToProps, { setAlert })(Register);

@@ -42,24 +42,27 @@ class UsersController {
         d: 'mm', //default
       });
 
-      user = new User({
-        name,
-        email,
-        avatar,
-        password,
-      });
+      // user = new User({
+      //   name,
+      //   email,
+      //   avatar,
+      //   password,
+      // });
 
       // Encrypt password
-      const salt = await bcrypt.genSalt(10);
+      //const salt = await bcrypt.genSalt(10);
 
-      user.password = await bcrypt.hash(password, salt);
+      //user.password = await bcrypt.hash(password, salt);
 
-      user = await user.save();
+      //user = await user.save();
 
       //Return jsonwebtoken
       const payload = {
         user: {
-          id: user._id,
+          name,
+          email,
+          avatar,
+          password,
         },
       };
 
@@ -114,6 +117,64 @@ class UsersController {
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
+    }
+  }
+
+  //[POST] /api/users/activation
+  async activation(req, res, next) {
+    const { tokenActivate } = req.body;
+    if (tokenActivate) {
+      //Verify the token is valid or not expired
+      try {
+        const decoded = jwt.verify(tokenActivate, config.get('jwtSecret'));
+
+        const { name, email, avatar, password } = decoded.user;
+
+        // See if user exists
+        let user = await User.findOne({ email: email });
+
+        if (user) {
+          return res
+            .status(400)
+            .json({ errors: [{ msg: 'Account already activate' }] });
+        }
+
+        user = new User({
+          name,
+          email,
+          avatar,
+          password,
+        });
+
+        //Encrypt password
+        const salt = await bcrypt.genSalt(10);
+
+        user.password = await bcrypt.hash(password, salt);
+
+        console.log(name, email, avatar, user.password);
+
+        await user.save();
+
+        console.log(user._id);
+
+        const payload = {
+          user: {
+            id: user._id,
+          },
+        };
+
+        const token = jwt.sign(
+          payload,
+          config.get('jwtSecret'),
+          { expiresIn: 360000 },
+          (err, token) => {
+            if (err) throw err;
+            res.json({ token });
+          }
+        );
+      } catch (err) {
+        return res.status(401).json({ msg: 'Token is not valid' });
+      }
     }
   }
 }

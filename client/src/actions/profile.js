@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { setAlert } from './alert';
+import { toast } from 'react-toastify';
 
+// import { setAlert } from './alert';
 import {
   GET_PROFILE,
   GET_PROFILES,
@@ -96,14 +97,16 @@ export const createProfile = (formData, history, edit = false) => async (
       type: GET_PROFILE,
       payload: res.data,
     });
-    dispatch(setAlert(edit ? 'Profile updated' : 'Profile created', 'success'));
+    edit ? toast.success('Profile updated') : toast.success('Profile created');
+    // dispatch(setAlert(edit ? 'Profile updated' : 'Profile created', 'success'));
     if (!edit) {
       history.push('/dashboard');
     }
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach((error) => toast.error(error.msg));
+      // errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
     dispatch({
       type: PROFILE_ERROR,
@@ -125,12 +128,14 @@ export const addExperience = (formData, history) => async (dispatch) => {
       type: UPDATE_PROFILE,
       payload: res.data,
     });
-    dispatch(setAlert('Experience added', 'success'));
+    // dispatch(setAlert('Experience added', 'success'));
+    toast.success('Experience added');
     history.push('/dashboard');
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      // errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach((error) => toast.error(error.msg));
     }
     dispatch({
       type: PROFILE_ERROR,
@@ -152,12 +157,13 @@ export const addEducation = (formData, history) => async (dispatch) => {
       type: UPDATE_PROFILE,
       payload: res.data,
     });
-    dispatch(setAlert('Education added', 'success'));
+    // dispatch(setAlert('Education added', 'success'));
+    toast.success('Education added');
     history.push('/dashboard');
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach((error) => toast.error(error.msg));
     }
     dispatch({
       type: PROFILE_ERROR,
@@ -174,7 +180,8 @@ export const deleteExperience = (id) => async (dispatch) => {
       type: UPDATE_PROFILE,
       payload: res.data,
     });
-    dispatch(setAlert('Experience removed', 'success'));
+    // dispatch(setAlert('Experience removed', 'success'));
+    toast.success('Experience removed');
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,
@@ -191,7 +198,8 @@ export const deleteEducation = (id) => async (dispatch) => {
       type: UPDATE_PROFILE,
       payload: res.data,
     });
-    dispatch(setAlert('Education removed', 'success'));
+    // dispatch(setAlert('Education removed', 'success'));
+    toast.success('Education removed');
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,
@@ -208,7 +216,8 @@ export const deleteAccount = (id) => async (dispatch) => {
       const res = await axios.delete(`/api/profile`);
       dispatch({ type: CLEAR_PROFILE });
       dispatch({ type: ACCOUNT_DELETED });
-      dispatch(setAlert('Your account has been permanantly deleted'));
+      // dispatch(setAlert('Your account has been permanantly deleted'));
+      toast.success('Your account has been delete permanantly');
     } catch (err) {
       dispatch({
         type: PROFILE_ERROR,

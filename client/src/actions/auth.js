@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
-import { setAlert } from './alert';
+// import { setAlert } from './alert';
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -32,7 +33,7 @@ export const loadUser = () => async (dispatch) => {
 };
 
 //Register
-export const register = ({ name, email, password }) => async (dispatch) => {
+export const register = async ({ name, email, password }) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -43,20 +44,21 @@ export const register = ({ name, email, password }) => async (dispatch) => {
 
   try {
     const res = await axios.post('/api/users', body, config);
-
-    dispatch({
-      type: REGISTER_SUCCESS,
-      payload: res.data,
-    });
-    dispatch(loadUser());
+    toast.success(res.data.message);
+    // dispatch({
+    //   type: REGISTER_SUCCESS,
+    //   payload: res.data,
+    // });
+    // dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      // errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach((error) => toast.error(error.msg));
     }
-    dispatch({
-      type: REGISTER_FAIL,
-    });
+    // dispatch({
+    //   type: REGISTER_FAIL,
+    // });
   }
 };
 
@@ -81,7 +83,8 @@ export const login = ({ email, password }) => async (dispatch) => {
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      // errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach((error) => toast.error(error.msg));
     }
     dispatch({
       type: LOGIN_FAIL,
