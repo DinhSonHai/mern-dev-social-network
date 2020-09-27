@@ -62,36 +62,6 @@ export const register = async ({ name, email, password }) => {
   }
 };
 
-//Activate
-export const activate = ({ token }) => async (dispatch) => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-
-  const body = JSON.stringify({ token });
-
-  try {
-    const res = await axios.post('/api/users/activation', body, config);
-    toast.success(res.data.message);
-    dispatch({
-      type: REGISTER_SUCCESS,
-      payload: res.data,
-    });
-    dispatch(loadUser());
-  } catch (err) {
-    const errors = err.response.data.errors;
-    if (errors) {
-      // errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
-      errors.forEach((error) => toast.error(error.msg));
-    }
-    dispatch({
-      type: REGISTER_FAIL,
-    });
-  }
-};
-
 //Login
 export const login = ({ email, password }) => async (dispatch) => {
   const config = {
@@ -126,4 +96,56 @@ export const login = ({ email, password }) => async (dispatch) => {
 export const logout = () => (dispatch) => {
   dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });
+};
+
+//*========================================================================*\\
+//Activate
+export const activate = ({ token }) => async (dispatch) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const body = JSON.stringify({ token });
+
+  try {
+    const res = await axios.post('/api/users/activation', body, config);
+    toast.success(res.data.message);
+    dispatch({
+      type: REGISTER_SUCCESS,
+      payload: res.data,
+    });
+    dispatch(loadUser());
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      // errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach((error) => toast.error(error.msg));
+    }
+    dispatch({
+      type: REGISTER_FAIL,
+    });
+  }
+};
+
+//Forget password
+export const forget = async ({ password }) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const body = JSON.stringify({ password });
+
+  try {
+    const res = await axios.post('/api/users/forget', body, config);
+    toast.success(res.data.message);
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => toast.error(error.msg));
+    }
+  }
 };
