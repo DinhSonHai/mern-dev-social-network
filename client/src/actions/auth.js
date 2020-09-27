@@ -130,7 +130,7 @@ export const activate = ({ token }) => async (dispatch) => {
 };
 
 //Forget password
-export const forget = async ({ password }) => {
+export const forget = async ({ email }) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -141,6 +141,27 @@ export const forget = async ({ password }) => {
 
   try {
     const res = await axios.post('/api/users/forget', body, config);
+    toast.success(res.data.message);
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => toast.error(error.msg));
+    }
+  }
+};
+
+//Update password
+export const updatePassword = async ({ token }) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const body = JSON.stringify({ password });
+
+  try {
+    const res = await axios.post('/api/users/update', body, config);
     toast.success(res.data.message);
   } catch (err) {
     const errors = err.response.data.errors;
