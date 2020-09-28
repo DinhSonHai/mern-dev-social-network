@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -19,6 +19,8 @@ const Dashboard = ({
   }, [getCurrentProfile]);
   return loading && profile === null ? (
     <Spinner />
+  ) : user.role === 'admin' ? (
+    <Redirect to="/admin"></Redirect>
   ) : (
     <div className="dashboard">
       <h1 className="large text-primary">Dashboard</h1>

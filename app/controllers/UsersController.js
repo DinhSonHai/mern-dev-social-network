@@ -179,6 +179,9 @@ class UsersController {
       }
     }
   }
+
+  //[POST] /api/users/forget
+  async forget(req, res, next) {}
 }
 
 module.exports = new UsersController();

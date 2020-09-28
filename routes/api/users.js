@@ -9,5 +9,6 @@ router.get('/', UsersController.index);
 
 router.post('/', validRegister, UsersController.register);
 router.post('/activation', UsersController.activation);
+router.post('/forget', UsersController.forget);
 
 module.exports = router;

@@ -18,6 +18,7 @@ import Profile from '../profile/Profile';
 import Post from '../post/Post';
 import Posts from '../posts/Posts';
 import Activate from '../auth/Activate';
+import Forget from '../auth/Forget';
 
 const Routes = () => {
   return (
@@ -27,6 +28,7 @@ const Routes = () => {
       <Switch>
         <Route exact path="/register" component={Register} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="/forget" component={Forget} />
         <Route exact path="/profiles" component={Profiles} />
         <Route exact path="/profile/:id" component={Profile} />
         <Route exact path="/users/activate/:token" component={Activate} />
