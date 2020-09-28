@@ -153,23 +153,27 @@ export const forget = async ({ email }) => {
   }
 };
 
-// //Update password
-// export const updatePassword = async ({ token }) => {
-//   const config = {
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//   };
+//Reset password
+export const reset = async ({ password, token: resetPasswordLink }) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
 
-//   const body = JSON.stringify({ password });
+  const body = JSON.stringify({ password, resetPasswordLink });
 
-//   try {
-//     const res = await axios.post('/api/users/update', body, config);
-//     toast.success(res.data.message);
-//   } catch (err) {
-//     const errors = err.response.data.errors;
-//     if (errors) {
-//       errors.forEach((error) => toast.error(error.msg));
-//     }
-//   }
-// };
+  try {
+    const res = await axios.post('/api/users/reset', body, config);
+    toast.success(res.data.msg);
+  } catch (err) {
+    const tokenError = err.response.data.msg;
+    if (tokenError) {
+      toast.error(tokenError);
+    }
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => toast.error(error.msg));
+    }
+  }
+};

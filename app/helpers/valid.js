@@ -26,7 +26,7 @@ module.exports.forgotPasswordValidator = [
 
 //reset password
 module.exports.resetPasswordValidator = [
-  check('newPassword', 'Please enter a password with 6 or more characters')
+  check('password', 'Please enter a password with 6 or more characters')
     .isLength({ min: 6 })
     .matches(/\d/)
     .withMessage('Password must contain a number'),

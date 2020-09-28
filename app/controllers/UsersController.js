@@ -151,8 +151,6 @@ class UsersController {
 
         user.password = await bcrypt.hash(password, salt);
 
-        console.log(name, email, avatar, user.password);
-
         await user.save();
 
         return res.json({ msg: 'Account activated ' });
@@ -255,6 +253,41 @@ class UsersController {
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
+    }
+  }
+
+  //[POST] /api/users/reset
+  async reset(req, res, next) {
+    const { password, resetPasswordLink } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    if (resetPasswordLink) {
+      try {
+        const decoded = jwt.verify(resetPasswordLink, config.get('jwtSecret'));
+        let user = await User.findOne({ resetPasswordLink });
+
+        const updatedField = {
+          resetPasswordLink: '',
+        };
+
+        //Encrypt password
+        const salt = await bcrypt.genSalt(10);
+
+        updatedField.password = await bcrypt.hash(password, salt);
+
+        if (user) {
+          user = await User.findOneAndUpdate(
+            { resetPasswordLink },
+            { $set: updatedField },
+            { new: true }
+          );
+          return res.json({ msg: 'Your password has been changed' });
+        }
+      } catch (err) {
+        return res.status(401).json({ msg: 'Token is not valid' });
+      }
     }
   }
 }
