@@ -100,73 +100,77 @@ export const logout = () => (dispatch) => {
 
 //*========================================================================*\\
 //Activate
-export const activate = ({ token }) => async (dispatch) => {
+export const activate = async ({ token: tokenActivate }, history) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
     },
   };
-
-  const body = JSON.stringify({ token });
+  const body = JSON.stringify({ tokenActivate });
 
   try {
     const res = await axios.post('/api/users/activation', body, config);
-    toast.success(res.data.message);
-    dispatch({
-      type: REGISTER_SUCCESS,
-      payload: res.data,
-    });
-    dispatch(loadUser());
+    toast.success(res.data.msg);
+    history.push('/login');
+    // dispatch({
+    //   type: REGISTER_SUCCESS,
+    //   payload: res.data,
+    // });
+    // dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
       // errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
       errors.forEach((error) => toast.error(error.msg));
     }
-    dispatch({
-      type: REGISTER_FAIL,
-    });
-  }
-};
-
-//Forget password
-export const forget = async ({ email }) => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-
-  const body = JSON.stringify({ password });
-
-  try {
-    const res = await axios.post('/api/users/forget', body, config);
-    toast.success(res.data.message);
-  } catch (err) {
-    const errors = err.response.data.errors;
-    if (errors) {
-      errors.forEach((error) => toast.error(error.msg));
+    const tokenError = err.response.data.msg;
+    if (tokenError) {
+      toast.error(tokenError);
     }
+    // dispatch({
+    //   type: REGISTER_FAIL,
+    // });
   }
 };
 
-//Update password
-export const updatePassword = async ({ token }) => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
+// //Forget password
+// export const forget = async ({ email }) => {
+//   const config = {
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   };
 
-  const body = JSON.stringify({ password });
+//   const body = JSON.stringify({ password });
 
-  try {
-    const res = await axios.post('/api/users/update', body, config);
-    toast.success(res.data.message);
-  } catch (err) {
-    const errors = err.response.data.errors;
-    if (errors) {
-      errors.forEach((error) => toast.error(error.msg));
-    }
-  }
-};
+//   try {
+//     const res = await axios.post('/api/users/forget', body, config);
+//     toast.success(res.data.message);
+//   } catch (err) {
+//     const errors = err.response.data.errors;
+//     if (errors) {
+//       errors.forEach((error) => toast.error(error.msg));
+//     }
+//   }
+// };
+
+// //Update password
+// export const updatePassword = async ({ token }) => {
+//   const config = {
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   };
+
+//   const body = JSON.stringify({ password });
+
+//   try {
+//     const res = await axios.post('/api/users/update', body, config);
+//     toast.success(res.data.message);
+//   } catch (err) {
+//     const errors = err.response.data.errors;
+//     if (errors) {
+//       errors.forEach((error) => toast.error(error.msg));
+//     }
+//   }
+// };

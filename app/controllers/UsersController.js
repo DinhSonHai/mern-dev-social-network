@@ -155,23 +155,25 @@ class UsersController {
 
         await user.save();
 
-        console.log(user._id);
+        return res.json({ msg: 'Account activated ' });
 
-        const payload = {
-          user: {
-            id: user._id,
-          },
-        };
+        // console.log(user._id);
 
-        const token = jwt.sign(
-          payload,
-          config.get('jwtSecret'),
-          { expiresIn: 360000 },
-          (err, token) => {
-            if (err) throw err;
-            res.json({ token });
-          }
-        );
+        // const payload = {
+        //   user: {
+        //     id: user._id,
+        //   },
+        // };
+
+        // const token = jwt.sign(
+        //   payload,
+        //   config.get('jwtSecret'),
+        //   { expiresIn: 360000 },
+        //   (err, token) => {
+        //     if (err) throw err;
+        //     res.json({ token });
+        //   }
+        // );
       } catch (err) {
         return res.status(401).json({ msg: 'Token is not valid' });
       }
