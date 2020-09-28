@@ -181,7 +181,82 @@ class UsersController {
   }
 
   //[POST] /api/users/forget
-  async forget(req, res, next) {}
+  async forget(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email } = req.body;
+
+    try {
+      // See if user exists
+      let user = await User.findOne({ email: email });
+
+      if (!user) {
+        return res.status(400).json({
+          errors: [{ msg: 'Account with that email does not exist' }],
+        });
+      }
+
+      //Return jsonwebtoken
+      const payload = {
+        user: {
+          id: user._id,
+        },
+      };
+
+      const token = jwt.sign(payload, config.get('jwtSecret'), {
+        expiresIn: '10m',
+      });
+
+      await user.updateOne({
+        resetPasswordLink: token,
+      });
+
+      //Email
+      //step 1
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.NODEMAILER_EMAIL,
+          pass: process.env.NODEMAILER_PASS,
+        },
+      });
+
+      const content = `
+      <h1>Please click this link to reset your password</h1>
+      <p>${process.env.CLIENT_URL}/users/reset/${token}</p>
+      <hr/>
+      <p>This email contain sensitive info</p>
+      <p>${process.env.CLIENT_URL}</p>
+    `;
+
+      //step 2
+      const mailOptions = {
+        from: process.env.NODEMAILER_EMAIL,
+        to: email,
+        subject: 'Password Reset link',
+        html: content,
+      };
+
+      //step 3
+      transporter
+        .sendMail(mailOptions)
+        .then(() => {
+          return res.json({ msg: `An email has been sent to ${email}` });
+        })
+        .catch((err) => {
+          return res.status(400).json({
+            error: errorHandler(err),
+          });
+        });
+      //res.send(user._id);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
+  }
 }
 
 module.exports = new UsersController();

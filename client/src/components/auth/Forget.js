@@ -20,38 +20,38 @@ const Forget = ({ setAlert, isAuthenticated }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // const result = await forget({ email });
+    await forget({ email });
   };
 
   if (isAuthenticated) {
-    return <Redirect to="/dashboard"></Redirect>;
+    return <Redirect to='/dashboard'></Redirect>;
   }
 
   return (
-    <div className="register">
-      <h1 className="large text-primary">Forget password</h1>
-      <p className="lead">
-        <i className="fas fa-user"></i> Please
+    <div className='register'>
+      <h1 className='large text-primary'>Forget password</h1>
+      <p className='lead'>
+        <i className='fas fa-user'></i> Please
       </p>
-      <form className="form" onSubmit={(e) => onSubmit(e)}>
-        <div className="form-group">
+      <form className='form' onSubmit={(e) => onSubmit(e)}>
+        <div className='form-group'>
           <input
-            type="email"
-            placeholder="Email Address"
-            name="email"
+            type='email'
+            placeholder='Email Address'
+            name='email'
             value={email}
             onChange={(e) => onChange(e)}
             // required
           />
         </div>
         <input
-          type="submit"
-          className="btn btn-primary"
-          value="Send me email"
+          type='submit'
+          className='btn btn-primary'
+          value='Send me email'
         />
       </form>
-      <p className="my-1">
-        Remember your password? <Link to="/login">Sign In</Link>
+      <p className='my-1'>
+        Remember your password? <Link to='/login'>Sign In</Link>
       </p>
     </div>
   );

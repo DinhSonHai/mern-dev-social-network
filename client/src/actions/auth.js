@@ -132,26 +132,26 @@ export const activate = async ({ token: tokenActivate }, history) => {
   }
 };
 
-// //Forget password
-// export const forget = async ({ email }) => {
-//   const config = {
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//   };
+//Forget password
+export const forget = async ({ email }) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
 
-//   const body = JSON.stringify({ password });
+  const body = JSON.stringify({ email });
 
-//   try {
-//     const res = await axios.post('/api/users/forget', body, config);
-//     toast.success(res.data.message);
-//   } catch (err) {
-//     const errors = err.response.data.errors;
-//     if (errors) {
-//       errors.forEach((error) => toast.error(error.msg));
-//     }
-//   }
-// };
+  try {
+    const res = await axios.post('/api/users/forget', body, config);
+    toast.success(res.data.msg);
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => toast.error(error.msg));
+    }
+  }
+};
 
 // //Update password
 // export const updatePassword = async ({ token }) => {
