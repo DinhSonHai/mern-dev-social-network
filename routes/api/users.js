@@ -16,4 +16,6 @@ router.post('/activation', UsersController.activation);
 router.post('/forget', forgotPasswordValidator, UsersController.forget);
 router.post('/reset', resetPasswordValidator, UsersController.reset);
 
+router.post('/googlelogin', UsersController.googleLogin);
+
 module.exports = router;
