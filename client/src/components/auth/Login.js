@@ -23,7 +23,7 @@ const Login = ({ login, auth, sendGoogleToken }) => {
   };
 
   //Redirect if logged in
-  if (auth.isAuthenticated) {
+  if (auth.isAuthenticated && auth.user !== null) {
     return <Redirect to='/dashboard'></Redirect>;
   }
 
