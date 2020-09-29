@@ -177,3 +177,28 @@ export const reset = async ({ password, token: resetPasswordLink }) => {
     }
   }
 };
+
+export const sendGoogleToken = (tokenId) => async (dispatch) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const body = JSON.stringify({ idToken: tokenId });
+  try {
+    const res = await axios.post('/api/users/googlelogin', body, config);
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: res.data,
+    });
+    dispatch(loadUser());
+    // history.push('/dashboard');
+  } catch (err) {
+    console.log(err.msg);
+    dispatch({
+      type: LOGIN_FAIL,
+    });
+    // toast.error(err.response.data.msg);
+  }
+};

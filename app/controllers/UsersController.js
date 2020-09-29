@@ -292,13 +292,12 @@ class UsersController {
   }
 
   //[POST] /api/users/googlelogin
-  client = new OAuth2Client(process.env.GOOGLE_CLIENT);
-
   async googleLogin(req, res, next) {
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT);
     const { idToken } = req.body;
     try {
       //Verify token
-      const response = await this.client.verifyIdToken({
+      const response = await client.verifyIdToken({
         idToken,
         audience: process.env.GOOGLE_CLIENT,
       });
@@ -312,9 +311,9 @@ class UsersController {
             },
           };
           const token = jwt.sign(payload, config.get('jwtSecret'), {
-            expiresIn: '10m',
+            expiresIn: 360000,
           });
-          return res.json({ token, user: { _id, name, email, role } });
+          return res.json({ token });
         } else {
           // Get users gravatar
           const avatar = gravatar.url(email, {
@@ -322,7 +321,6 @@ class UsersController {
             r: 'pg', //rating
             d: 'mm', //default
           });
-
           const password = email + config.get('jwtSecret');
           user = new User({
             name,
@@ -330,10 +328,8 @@ class UsersController {
             avatar,
             password,
           });
-
           //Encrypt password
           const salt = await bcrypt.genSalt(10);
-
           user.password = await bcrypt.hash(password, salt);
           await user.save();
           const payload = {
@@ -342,9 +338,9 @@ class UsersController {
             },
           };
           const token = jwt.sign(payload, config.get('jwtSecret'), {
-            expiresIn: '10m',
+            expiresIn: 360000,
           });
-          return res.json({ token, user: { _id, name, email, role } });
+          return res.json({ token });
         }
       } else {
         return res
@@ -352,13 +348,8 @@ class UsersController {
           .json({ error: 'Google login failed. Try again' });
       }
     } catch (err) {
-      res.status(500).send('Server error');
+      res.status(500).json({ msg: 'Google token' });
     }
-    // try {
-    //   const decoded = jwt.verify(tokenActivate, config.get('jwtSecret'));
-    // } catch (err) {
-    //   return res.status(401).json({ msg: 'Token is not valid' });
-    // }
   }
 }
 
