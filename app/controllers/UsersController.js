@@ -353,7 +353,32 @@ class UsersController {
   }
 
   //[POST] /api/users/facebooklogin
-  async facebookLogin(req, res, next) {}
+  async facebookLogin(req, res, next) {
+    console.log('FACEBOOK LOGIN REQ BODY', req.body);
+    const { userID, accessToken } = req.body;
+
+    const url = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`;
+
+    return fetch(url, {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        const { email, name } = response;
+        User.findOne({ email }).exec((err, user) => {
+          if (user) {
+            return res.json({ msg: 'Yes' });
+          } else {
+            return res.json({ msg: 'No' });
+          }
+        });
+      })
+      .catch((error) => {
+        res.json({
+          error: 'Facebook login failed. Try later',
+        });
+      });
+  }
 }
 
 module.exports = new UsersController();
