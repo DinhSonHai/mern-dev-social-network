@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { login, sendGoogleToken } from '../../actions/auth';
+import { login, sendFacebookToken, sendGoogleToken } from '../../actions/auth';
 import { GoogleLogin } from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 //import axios from 'axios';
 
 const Login = ({ login, auth, sendGoogleToken }) => {
@@ -60,12 +61,26 @@ const Login = ({ login, auth, sendGoogleToken }) => {
         clientId={`${process.env.REACT_APP_GOOGLE_CLIENT}`}
         onSuccess={(response) => sendGoogleToken(response.tokenId)}
         onFailure={(response) => sendGoogleToken(response.tokenId)}
+        cookiePolicy={'single_host_origin'}
         render={(renderProps) => (
           <button onClick={renderProps.onClick} disabled={renderProps.disabled}>
             Sign in with Google
           </button>
         )}
       ></GoogleLogin>
+      <br />
+      <FacebookLogin
+        appId={process.env.REACT_APP_FACEBOOK_CLIENT}
+        autoLoad={false}
+        callback={(response) =>
+          sendFacebookToken(response.userId, response.accessToken)
+        }
+        render={(renderProps) => (
+          <button onClick={renderProps.onClick} disabled={renderProps.disabled}>
+            Sign in with facebook
+          </button>
+        )}
+      ></FacebookLogin>
       <p className='my-1'>
         <Link to='/forget'>Forgot your password?</Link>
       </p>

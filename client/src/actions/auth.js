@@ -195,6 +195,32 @@ export const sendGoogleToken = (tokenId) => async (dispatch) => {
     dispatch(loadUser());
     // history.push('/dashboard');
   } catch (err) {
+    dispatch({
+      type: LOGIN_FAIL,
+    });
+    // toast.error(err.response.data.msg);
+  }
+};
+
+export const sendFacebookToken = (userId, accessToken) => async (dispatch) => {
+  console.log(userId);
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const body = JSON.stringify({ userId, accessToken });
+  try {
+    const res = await axios.post('/api/users/facebooklogin', body, config);
+    console.log(res.data);
+    // dispatch({
+    //   type: LOGIN_SUCCESS,
+    //   payload: res.data,
+    // });
+    // dispatch(loadUser());
+    // history.push('/dashboard');
+  } catch (err) {
     console.log(err.msg);
     dispatch({
       type: LOGIN_FAIL,

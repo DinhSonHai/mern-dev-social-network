@@ -17,5 +17,6 @@ router.post('/forget', forgotPasswordValidator, UsersController.forget);
 router.post('/reset', resetPasswordValidator, UsersController.reset);
 
 router.post('/googlelogin', UsersController.googleLogin);
+router.post('/facebooklogin', UsersController.facebookLogin);
 
 module.exports = router;

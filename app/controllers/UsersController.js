@@ -351,6 +351,9 @@ class UsersController {
       res.status(500).json({ msg: 'Google token' });
     }
   }
+
+  //[POST] /api/users/facebooklogin
+  async facebookLogin(req, res, next) {}
 }
 
 module.exports = new UsersController();
