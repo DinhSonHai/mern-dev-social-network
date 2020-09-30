@@ -202,18 +202,17 @@ export const sendGoogleToken = (tokenId) => async (dispatch) => {
   }
 };
 
-export const sendFacebookToken = (userId, accessToken) => async (dispatch) => {
-  console.log(userId);
+export const sendFacebookToken = async (userID, accessToken) => {
   const config = {
     headers: {
       'Content-Type': 'application/json',
     },
   };
 
-  const body = JSON.stringify({ userId, accessToken });
+  const body = JSON.stringify({ userID, accessToken });
   try {
     const res = await axios.post('/api/users/facebooklogin', body, config);
-    console.log(res.data);
+    return res.data;
     // dispatch({
     //   type: LOGIN_SUCCESS,
     //   payload: res.data,
@@ -221,10 +220,18 @@ export const sendFacebookToken = (userId, accessToken) => async (dispatch) => {
     // dispatch(loadUser());
     // history.push('/dashboard');
   } catch (err) {
-    console.log(err.msg);
-    dispatch({
-      type: LOGIN_FAIL,
-    });
+    console.log(err.response.err);
+    // dispatch({
+    //   type: LOGIN_FAIL,
+    // });
     // toast.error(err.response.data.msg);
   }
+};
+
+export const facebookLogin = (data) => async (dispatch) => {
+  dispatch({
+    type: LOGIN_SUCCESS,
+    payload: data,
+  });
+  dispatch(loadUser());
 };

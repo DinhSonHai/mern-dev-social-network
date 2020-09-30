@@ -26,6 +26,7 @@
     "lodash": "^4.17.20",
     "mongoose": "^5.10.5",
     "morgan": "^1.10.0",
+    "node-fetch": "^2.6.1",
     "nodemailer": "^6.4.11",
     "react-toastify": "^6.0.8",
     "request": "^2.88.2"

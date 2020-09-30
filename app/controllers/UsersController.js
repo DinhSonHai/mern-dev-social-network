@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const { OAuth2Client } = require('google-auth-library');
 const nodemailer = require('nodemailer');
+const fetch = require('node-fetch');
 
 const User = require('../models/User');
 const config = require('config');
@@ -354,8 +355,8 @@ class UsersController {
 
   //[POST] /api/users/facebooklogin
   async facebookLogin(req, res, next) {
-    console.log('FACEBOOK LOGIN REQ BODY', req.body);
     const { userID, accessToken } = req.body;
+    console.log(userID, accessToken);
 
     const url = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`;
 
@@ -366,10 +367,48 @@ class UsersController {
       .then((response) => {
         const { email, name } = response;
         User.findOne({ email }).exec((err, user) => {
+          if (err) res.json(err);
           if (user) {
-            return res.json({ msg: 'Yes' });
+            const payload = {
+              user: {
+                id: user._id,
+              },
+            };
+            const token = jwt.sign(payload, config.get('jwtSecret'), {
+              expiresIn: 360000,
+            });
+            return res.json({ token });
           } else {
-            return res.json({ msg: 'No' });
+            //   // Get users gravatar
+            const avatar = gravatar.url(email, {
+              s: '200', //size
+              r: 'pg', //rating
+              d: 'mm', //default
+            });
+            const password = email + config.get('jwtSecret');
+            user = new User({
+              name,
+              email,
+              avatar,
+              password,
+            });
+            //   //Encrypt password
+            bcrypt.genSalt(10, (err, salt) => {
+              bcrypt.hash(password, salt, (err, result) => {
+                user.password = result;
+              });
+            });
+            user.save((err, user) => {
+              const payload = {
+                user: {
+                  id: user._id,
+                },
+              };
+              const token = jwt.sign(payload, config.get('jwtSecret'), {
+                expiresIn: 360000,
+              });
+              return res.json({ token });
+            });
           }
         });
       })

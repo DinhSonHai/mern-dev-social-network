@@ -2,12 +2,17 @@ import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { login, sendFacebookToken, sendGoogleToken } from '../../actions/auth';
+import {
+  login,
+  sendFacebookToken,
+  sendGoogleToken,
+  facebookLogin,
+} from '../../actions/auth';
 import { GoogleLogin } from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 //import axios from 'axios';
 
-const Login = ({ login, auth, sendGoogleToken }) => {
+const Login = ({ login, auth, sendGoogleToken, facebookLogin }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -72,9 +77,13 @@ const Login = ({ login, auth, sendGoogleToken }) => {
       <FacebookLogin
         appId={process.env.REACT_APP_FACEBOOK_CLIENT}
         autoLoad={false}
-        callback={(response) =>
-          sendFacebookToken(response.userId, response.accessToken)
-        }
+        callback={async (response) => {
+          const data = await sendFacebookToken(
+            response.userID,
+            response.accessToken
+          );
+          facebookLogin(data);
+        }}
         render={(renderProps) => (
           <button onClick={renderProps.onClick} disabled={renderProps.disabled}>
             Sign in with facebook
@@ -95,10 +104,15 @@ Login.propTypes = {
   login: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   sendGoogleToken: PropTypes.func.isRequired,
+  facebookLogin: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { login, sendGoogleToken })(Login);
+export default connect(mapStateToProps, {
+  login,
+  sendGoogleToken,
+  facebookLogin,
+})(Login);
