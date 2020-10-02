@@ -34,11 +34,9 @@ export const getAllProfiles = () => async (dispatch) => {
   dispatch({ type: CLEAR_PROFILE });
   try {
     const res = await axios.get('/api/profile');
-    console.log('client', res.data.google);
-    console.log('client', res.data.facebook);
     dispatch({
       type: GET_PROFILES,
-      payload: res.data.profiles,
+      payload: res.data,
     });
   } catch (err) {
     dispatch({

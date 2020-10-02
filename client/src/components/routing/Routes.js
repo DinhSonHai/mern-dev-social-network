@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 
 import Alert from '../layout/Alert';
 import NotFound from '../layout/NotFound';
@@ -26,6 +27,7 @@ const Routes = () => {
     <section className='container'>
       {/* <Alert /> */}
       <ToastContainer />
+      <MessengerCustomerChat pageId='101556255057258' appId='615365382438209' />
       <Switch>
         <Route exact path='/register' component={Register} />
         <Route exact path='/login' component={Login} />
