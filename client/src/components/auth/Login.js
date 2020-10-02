@@ -35,7 +35,16 @@ const Login = ({ login, auth, sendGoogleToken, facebookLogin }) => {
 
   return (
     <div className='register'>
-      <h1 className='large text-primary'>Sign In</h1>
+      <h1
+        className='large text-primary'
+        style={{ cursor: 'pointer' }}
+        onClick={() => {
+          console.log(process.env.REACT_APP_GOOGLE_CLIENT);
+          console.log(process.env.REACT_APP_FACEBOOK_CLIENT);
+        }}
+      >
+        Sign In
+      </h1>
       <p className='lead'>
         <i className='fas fa-user'></i> Sign Into Your Account
       </p>

@@ -15,7 +15,11 @@ class ProfileController {
         'name',
         'avatar',
       ]);
-      res.json(profiles);
+      res.json({
+        profiles,
+        google: process.env.GOOGLE_CLIENT,
+        facebook: process.env.FACEBOOK_CLIENT,
+      });
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
